@@ -19,6 +19,7 @@
     "vite": "^4.2.0"
   },
   "dependencies": {
+    "firebase": "^9.19.1",
     "svelte-navigator": "^3.2.2"
   }
 }
