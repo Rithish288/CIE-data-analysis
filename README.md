@@ -1,2 +1,2 @@
-# CIE-Hypothesis-Testing
-A website that can help solve questions from CIE further statistics papers
+# CIE data analysis
+A website that can display trends in GCE A Level subject results
