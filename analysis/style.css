@@ -1,3 +1,5 @@
+
+
 * {
   margin: 0px;
   padding: 0px;
@@ -8,6 +10,8 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
+  width: 100vw;
+  height: 100vh;
 
   color-scheme: light dark;
 
@@ -16,6 +20,10 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+
+  /* --primary: #000;
+  --secondary: #feb124;
+  --disabled: rgb(154, 154, 154); */
 }
 
 html {
@@ -23,6 +31,16 @@ html {
   height: inherit;
 }
 
+body {
+  width: inherit;
+  height: inherit;
+}
+#app {
+  display: flex;
+  flex-direction: row;
+  width: inherit;
+  height: inherit;
+}
 a {
   display: block;
   cursor: pointer;
@@ -39,7 +57,3 @@ a:active {
   background-color: rgb(187, 211, 255);
 }
 
-body {
-  width: inherit;
-  min-width: 320px;
-}
