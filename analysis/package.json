@@ -1,5 +1,5 @@
 {
-  "name": "hypothesis-testing",
+  "name": "data-analysis",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -24,7 +24,8 @@
   "dependencies": {
     "apexcharts": "^3.37.3",
     "firebase": "^9.19.1",
-    "rxfire": "^6.0.3",
+    "firebase-admin": "^11.6.0",
+    "rxjs": "^7.8.0",
     "svelte-material-ui": "^7.0.0-beta.3"
   }
 }
