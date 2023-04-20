@@ -1,14 +1,29 @@
 <script lang="ts">
-import Select, {Option} from "@smui/select";
-import { currentSeason$, seasons } from "./subjects.change";
-let currentSeason = seasons[seasons.length - 1];
-$: currentSeason$.next(currentSeason);
+import FormField from "@smui/form-field";
+import Checkbox from "@smui/checkbox";
+import List from "@smui/list/src/List.svelte";
+import { currentSubject$, seasonSelection$, subjectSeasons$, subscriptions$} from "./subjects.change";
+import { sortSeasons } from "./algorithms";
 
+let selected = [];
+$: seasonSelection$.next(selected);
+let availableSeasons = [];
+subscriptions$.add(
+	subjectSeasons$.subscribe(seasonArr => {
+		sortSeasons(seasonArr);
+		availableSeasons = seasonArr;
+	})
+);
+subscriptions$.add(
+	currentSubject$.subscribe(() => selected = [])
+)
 </script>
 
-<Select bind:value={currentSeason} label="Select season">
-	{#each seasons as season}
-		<Option value={season}>{season}</Option>
+<List id="available-season-select" style="float:left; overflow-x:hidden">
+	{#each availableSeasons as season}
+		<FormField>
+			<Checkbox bind:group={selected} value={season}/>
+			<span>{season}</span>
+		</FormField>
 	{/each}
-	<svelte:fragment slot="helperText">Atleast 1 season must be selected</svelte:fragment>
-</Select>
+</List>

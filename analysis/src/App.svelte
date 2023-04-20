@@ -1,22 +1,16 @@
 <script lang="ts">
-  import Dashboard from "./lib/Dashboard.svelte";
-  import Main from "./lib/statistical-tests/Main.svelte";
-  import Drawer, {Content, AppContent} from "@smui/drawer";
-  import List, {Item, Text} from "@smui/list";
-  let activePage = "dashboard";
-  const components = {
-    "dashboard": Dashboard,
-    "statistical-tests": Main
-  }
+import Dashboard from "./lib/Dashboard.svelte";
+import TopAppBar, { Row, Section, Title } from "@smui/top-app-bar";
+let activePage = "dashboard";
+const components = {
+  "dashboard": Dashboard,
+}
 </script>
-<Drawer>
-  <Content>
-    <List>
-      <Item on:click="{() => activePage = "dashboard"}"><Text>Dashboard</Text></Item>
-      <Item on:click="{() => activePage = "statistical-tests"}">Statistical Tests</Item>
-    </List>
-  </Content>
-</Drawer>
-<AppContent>
-  <svelte:component this="{components[activePage]}"/>
-</AppContent>
+<TopAppBar variant="static">
+  <Row>
+    <Section>
+      <Title>CIE Data Analysis</Title>
+    </Section>
+  </Row>
+</TopAppBar>
+<svelte:component this="{components[activePage]}"/>

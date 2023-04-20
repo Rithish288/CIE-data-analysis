@@ -1,3 +1,15 @@
-.mdc-drawer-app-content {
-  width: 100%;
+div.container ul#available-season-select {
+  max-width: 500px;
+  width: 17%;
+  min-width: 20px;
+}
+div.container ul.mdc-deprecated-list div.mdc-form-field {
+  min-width: 80px;
+}
+div.container ul#available-season-select {
+  height: 90vh;
+  overflow-y: scroll;
+}
+div.container main.dashboard-content {
+  flex-basis: 85%;
 }
