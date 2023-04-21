@@ -1,60 +1,77 @@
 <script lang="ts" defer="false">
 import Season from "./Season.svelte";
 import Alevel from "./Alevel.svelte";
+import type { ChartDataset, ChartTypeRegistry, Point } from "chart.js/auto";
 import { Chart } from "chart.js/auto";
 import { onMount, onDestroy } from "svelte";
 import { cacheObject, currentSubject$, seasonSelection$, subscriptions$ } from "./subjects.change";
 import { formatDoc, getDocData } from "../private/data-retriever";
+import { cumulativeToDistr } from "./algorithms";
+
+function clearDataSet(dataSet: ChartDataset<keyof ChartTypeRegistry, (number | [number, number] | Point)[]>[]): void {
+	dataSet.forEach(item => item.data.length = 0);
+	chart.data.labels = [];
+	chart.update();
+}
+
+function addDataset(): void {
+	chart.data.labels.push(this.season);
+	for (let i = 0; i < 8; i++) {
+		chart.data.datasets[i].data.push(this.dataPoint[i])
+	}
+	chart.update();
+}
 
 let canvas: HTMLCanvasElement;
 let chart: Chart;
 onMount(() => {
 chart = new Chart(canvas.getContext("2d"), {
-	type: "line",
+	type: "bar",
 	options: {
 		responsive: true,
-		maintainAspectRatio: true,
-		interaction: {
-			mode: "nearest",
-			intersect: true
+		scales: {
+			x: {
+				stacked: true,
+			},
+			y: {
+				stacked: true
+			}
 		}
 	},
 	data: {
-		labels: ["A*", "A or above", "B or above", "C or above", "D or above", "E or above", "ungraded", "AS A-E grades"],
-		datasets: [{data: [0, 199]}]
+		labels: [],
+		datasets: [
+			{ label: "A*", data: [] },
+			{ label: "A or above", data: [] },
+			{ label: "B or above", data: [] },
+			{ label: "C or above", data: [] },
+			{ label: "D or above", data: [] },
+			{ label: "E or above", data: [] },
+			{ label: "ungraded", data: [] },
+			{ label: "AS A-E grades", data: [] }
+		]
 	},
 });
 
 subscriptions$.add(
 	currentSubject$.subscribe(() => {
-		chart.data.datasets.length = 0;
-		chart.update();
+		clearDataSet(chart.data.datasets);
 	})
 );
 
-function addDataset(): void {
-	chart.data.datasets.push({
-		data: this.plotData,
-		label: this.season,
-		pointHoverBackgroundColor: "black",
-		borderColor: "rgb(240, 89, 225, 0.5)"
-	});
-	chart.update();
-}
-
 const seasonSelectionSub = seasonSelection$.subscribe(subArr => {
-	const curSubj = currentSubject$.getValue()
-	chart.data.datasets.length = 0;
+	const curSubj = currentSubject$.getValue();
+	clearDataSet(chart.data.datasets);
 	subArr.forEach(season => {
 		let plotData: number[];
 		if(cacheObject[curSubj][season]) {
-			plotData = cacheObject[currentSubject$.getValue()][season];
-			addDataset.call({plotData, season});
+			plotData = cacheObject[curSubj][season];
+			addDataset.call({dataPoint: cumulativeToDistr(plotData), season});
 		} else {
 			const docDataSub = getDocData(curSubj, season).subscribe(data => {
 				plotData = formatDoc(data.data());
 				cacheObject[curSubj][season] = plotData;
-				addDataset.call({plotData, season});
+				addDataset.call({dataPoint: cumulativeToDistr(plotData), season});
 			})
 			subscriptions$.add(docDataSub);
 		}
@@ -82,8 +99,5 @@ onDestroy(() => subscriptions$.unsubscribe());
 	div.container main.dashboard-content {
 		float: none;
 		overflow: hidden;
-	}
-	div.container main.dashboard-content canvas {
-		width: 100% !important;
 	}
 </style>
