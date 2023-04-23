@@ -1,5 +1,5 @@
 <script lang="ts" defer="false">
-import Season from "./Season.svelte";
+import SeasonSelect from "./season-select/SeasonSelect.svelte";
 import Alevel from "./Alevel.svelte";
 import type { ChartDataset, ChartTypeRegistry, Point } from "chart.js/auto";
 import { Chart } from "chart.js/auto";
@@ -84,7 +84,7 @@ onDestroy(() => subscriptions$.unsubscribe());
 </script>
 
 <div class="container">
-	<Season/>
+	<SeasonSelect/>
 	<main class="dashboard-content">
 		<Alevel/>
 		<canvas bind:this={canvas}></canvas>
