@@ -7,6 +7,7 @@ import { onMount, onDestroy } from "svelte";
 import { cacheObject, currentSubject$, seasonSelection$, subscriptions$ } from "./subjects.change";
 import { formatDoc, getDocData } from "../private/data-retriever";
 import { cumulativeToDistr } from "./algorithms";
+import { pairwise, startWith } from "rxjs";
 
 function clearDataSet(dataSet: ChartDataset<keyof ChartTypeRegistry, (number | [number, number] | Point)[]>[]): void {
 	dataSet.forEach(item => item.data.length = 0);
@@ -53,6 +54,7 @@ chart = new Chart(canvas.getContext("2d"), {
 	},
 });
 
+
 subscriptions$.add(
 	currentSubject$.subscribe(() => {
 		clearDataSet(chart.data.datasets);
@@ -62,7 +64,8 @@ subscriptions$.add(
 const seasonSelectionSub = seasonSelection$.subscribe(subArr => {
 	const curSubj = currentSubject$.getValue();
 	clearDataSet(chart.data.datasets);
-	subArr.forEach(season => {
+
+	subArr.seasons.forEach(season => {
 		let plotData: number[];
 		if(cacheObject[curSubj][season]) {
 			plotData = cacheObject[curSubj][season];
@@ -76,7 +79,8 @@ const seasonSelectionSub = seasonSelection$.subscribe(subArr => {
 			subscriptions$.add(docDataSub);
 		}
 	})
-})
+});
+
 subscriptions$.add(seasonSelectionSub)
 })
 onDestroy(() => subscriptions$.unsubscribe());

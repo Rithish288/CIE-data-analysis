@@ -4,8 +4,6 @@ export const subjects = ["Accounting","Afrikaans","Arabic","Art and Design","Bio
 export const cacheObject = subjects.reduce((o, key) => ({ ...o, [key]: {}}), {})
 export const subjectSeasons$ = new Subject<Array<string>>();
 export const selectAll$ = new BehaviorSubject<boolean>(false);
-export const updateChart$ = new BehaviorSubject<boolean>(false);
+export const seasonSelection$ = new Subject<{seasons: Array<string>}>();
 export const subscriptions$ = new Subscription();
-export const seasonSelection$ = new Subject<Array<string>>();
 export const currentSubject$ = new BehaviorSubject<string>(subjects[0]);
-

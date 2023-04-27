@@ -5,10 +5,9 @@ import List from "@smui/list/src/List.svelte";
 import SelectAll from "./SelectAll.svelte";
 import { sortSeasons } from "../algorithms";
 import { currentSubject$, seasonSelection$, selectAll$, subjectSeasons$, subscriptions$} from "../subjects.change";
-
 let selected: string[] = [];
-$: seasonSelection$.next(selected); 
-let availableSeasons = [];
+$: seasonSelection$.next({seasons: selected});
+let availableSeasons =  [];
 subscriptions$.add(
 	subjectSeasons$.subscribe(seasonArr => {
 		sortSeasons(seasonArr);
@@ -17,8 +16,9 @@ subscriptions$.add(
 );
 subscriptions$.add(
 	selectAll$.subscribe(bool => {
-		selected = [];
-		if(bool) availableSeasons.forEach((s, i) => selected[i] = s); 
+		if(bool) {
+			availableSeasons.forEach((s, i) => selected[i] = s);
+		} else selected = []
 	})
 )
 subscriptions$.add(
@@ -31,7 +31,7 @@ subscriptions$.add(
 	<List>
 		{#each availableSeasons as season}
 			<FormField>
-				<Checkbox bind:group={selected} value={season}/>
+				<Checkbox bind:group={selected} value={season} accept="great"/>
 				<span>{season}</span>
 			</FormField>
 		{/each}
