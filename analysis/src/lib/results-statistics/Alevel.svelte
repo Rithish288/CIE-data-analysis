@@ -46,7 +46,7 @@ function change() {
 </script>
 
 <div class="form">
-	<Select variant="filled" bind:value={$currentsubject} label="Select A Level">
+	<Select variant="filled" bind:value={$currentsubject} label="A Level">
 		{#each subjects as subject}
 			<Option value={subject}>{subject}</Option>
 		{/each}
@@ -55,7 +55,7 @@ function change() {
 	{#await getSubjectSeasons($currentsubject)}
 		<CircularProgress style="width: 32px; height: 32px" indeterminate /> Loading Season data...
 	{:then seasons} 
-		<Select on:input={change} variant="filled" bind:value={startSeason} label="Select start season" required>
+		<Select on:input={change} variant="filled" bind:value={startSeason} label="Start season" required>
 			{#each seasons as season}
 				<Option value={season}>{season}</Option>
 			{/each}
@@ -65,7 +65,7 @@ function change() {
 				</span>
 			</svelte:fragment>
 		</Select>	
-		<Select on:change={() => errorMessage.end = ""} variant="filled" bind:value={endSeason} label="Select end season" required>
+		<Select on:change={() => errorMessage.end = ""} variant="filled" bind:value={endSeason} label="End season" required>
 			{#each seasons as season}
 				<Option value={season}>{season}</Option>
 			{/each}
