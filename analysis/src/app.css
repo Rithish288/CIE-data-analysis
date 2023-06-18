@@ -1,20 +1,5 @@
-div.container div.season-select {
-  max-width: 500px;
-  width: 17%;
-  min-width: 20px;
-}
-div.container ul.mdc-deprecated-list div.mdc-form-field {
-  min-width: 80px;
-}
-div.container div.season-select {
-  height: 90vh;
-  overflow-y: scroll;
-}
-div.container main.dashboard-content {
-  flex-basis: 85%;
-}
-div.select-all {
-  margin-left: auto;
-  display: block;
-  margin-inline: 8px;
+span.error-message {
+	color: red;
+	display: inline-block;
+	margin-bottom: 1rem;
 }

@@ -1,0 +1,15 @@
+import { Subject, Subscription } from "rxjs";
+import { writable } from "svelte/store";
+
+//a single subscription to hold all other subscriptions
+export const subscriptions$ = new Subscription();
+
+// All A Level subjects for which the data is available publicly
+export const subjects = ["Accounting","Afrikaans","Arabic","Art and Design","Biology","Business","Chemistry","Chinese","Classical Studies","Computer Science","Design and Technology","Digital Media and Design","Divinity","Drama","Economics","English Language","Food Studies","French","Further Mathematics","Geography","Global Perspectives & Research","Hindi","Hinduism","History","Information Technology","Islamic Studies","Law","Literature in English","Marine Science","Mathematics","Media Studies","Music","Physical Education","Physics","Portuguese","Psychology","Sociology","Spanish","Tamil","Thinking Skills","Travel and Tourism","Urdu"]
+export const subjectCodes: {[season : number]: string}[] = [{8021:"English General Paper"},{8024:"Nepal Studies"},{8041:"Divinity"},{8053:"Islamic Studies"},{8058:"Hinduism"},{8281:"Japanese Language"},{8291:"Environmental Management"},{8665:"First Language Spanish"},{8675:"Hindi Literature"},{8679:"Afrikaans Language"},{8680:"Arabic Language"},{8681:"Chinese Language"},{8682:"French Language"},{8683:"German Language"},{8684:"Portuguese Language"},{8685:"Spanish Language"},{8686:"Urdu Language"},{8687:"Hindi Language"},{8689:"Tamil Language"},{8695:"Language and Literature in English"},{9011:"Divinity"},{9013:"Islamic Studies"},{9014:"Hinduism"},{9084:"Law"},{9093:"English Language"},{9231:"Further Mathematics"},{9239:"Global Perspectives & Research"},{9274:"Classical Studies"},{9389:"History"},{9395:"Travel and Tourism"},{9396:"Physical Education"},{9479:"Art and Design"},{9481:"Digital Media & Design"},{9482:"Drama"},{9483:"Music"},{9487:"Hinduism"},{9488:"Islamic Studies"},{9489:"History"},{9607:"Media Studies"},{9608:"Computer Science"},{9609:"Business"},{9618:"Computer Science"},{9626:"Information Technology"},{9631:"Design and Textiles"},{9676:"Urdu"},{9680:"Arabic"},{9686:"Urdu"},{9687:"Hindi"},{9689:"Tamil"},{9693:"Marine Science"},{9694:"Thinking Skills"},{9695:"Literature in English"},{9696:"Geography"},{9699:"Sociology"},{9700:"Biology"},{9701:"Chemistry"},{9702:"Physics"},{9703:"Music"},{9704:"Art and Design"},{9705:"Design and Technology"},{9706:"Accounting"},{9708:"Economics"},{9709:"Mathematics"},{9715:"Chinese"},{9716:"French"},{9717:"German"},{9719:"Spanish"},{9990:"Psychology"}];
+export const cacheObject = subjects.reduce((o, key) => ({ ...o, [key]: {}}), {})
+export const subjectSeasons$ = new Subject<Array<string>>();
+export const seasonSelection$ = new Subject<{seasons: Array<string>}>();
+
+export const currentsubject = writable<string>(subjects[0]);
+export const availableSeasons = writable<string[]>([]);
