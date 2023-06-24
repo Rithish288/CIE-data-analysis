@@ -1,54 +1,40 @@
 <script lang="ts" defer="false">
 import Alevel from "./Alevel.svelte";
 import { Chart } from "chart.js/auto";
-import { onMount, onDestroy, setContext } from "svelte";
-import { availableSeasons, cacheObject, currentsubject, seasonSelection$, subscriptions$ } from "./subjects.change";
-import { formatDoc, getDocData } from "../../private/data-retriever";
-import { cumulativeToDistr } from "../algorithms";
+import { onMount } from "svelte";
+import { subjects } from "./subjects.change";
+import { formatDoc, getCollection } from "../../private/data-retriever";
+import { convSeasonToTimeStamp, cumulativeToDistr } from "../algorithms";
 import { chartOptions } from "./chartOptions";
 import { addDataset, clearDataSet } from "../utils";
 
-setContext("currentSubject", currentsubject);
-setContext("availableSeasons", availableSeasons);
-
 let canvas: HTMLCanvasElement;
 let chart: Chart;
-let lengthGreaterThan1: boolean = true;
-onMount(() => {
-chart = new Chart(canvas.getContext("2d"), chartOptions);
+let plotSeasons = [];
+let currentSubject = subjects[0];
 
-	currentsubject.subscribe(() => clearDataSet(chart, chart.data.datasets))
-	
-	const seasonSelectionSub = seasonSelection$.subscribe(subArr => {
-		const curSubj = $currentsubject;
-		clearDataSet(chart, chart.data.datasets);
-		subArr.seasons.forEach(season => {	
-			let plotData: number[];
-			if(cacheObject[curSubj][season]) {
-				plotData = cacheObject[curSubj][season];
-			addDataset.call(chart, {dataPoint: cumulativeToDistr(plotData), season});
-		} else {
-			const docDataSub = getDocData(curSubj, season).subscribe(data => {
-				plotData = formatDoc(data.data());
-				cacheObject[curSubj][season] = plotData;
-				addDataset.call(chart, {dataPoint: cumulativeToDistr(plotData), season});
+$: {
+	if(chart) clearDataSet(chart, chart?.data.datasets)
+	if(plotSeasons.length > 0) {
+		const data = getCollection(currentSubject, convSeasonToTimeStamp(plotSeasons[0]), convSeasonToTimeStamp(plotSeasons[plotSeasons.length - 1]));
+		data.then(values => {
+			values.map((element, i) => {
+				const formatted = cumulativeToDistr(formatDoc(element.data()))
+				addDataset(chart, {season: plotSeasons[i], dataPoint: formatted})
 			})
-			subscriptions$.add(docDataSub);
-		}
-		lengthGreaterThan1 = subArr.seasons.length > 1;
-		console.log(lengthGreaterThan1)
-	})
+			chart?.update();
+		});
+	}
+}
+onMount(() => {
+	chart = new Chart(canvas.getContext("2d"), chartOptions);
 });
-
-subscriptions$.add(seasonSelectionSub)
-})
-onDestroy(() => subscriptions$.unsubscribe());
 
 </script>
 
 <div class="container">
 	<div class="sidebar">
-		<Alevel/>
+		<Alevel bind:currentSubject bind:plotSeasons/>
 	</div>
 	<main class="dashboard">
 		<div class="dashboard-content">

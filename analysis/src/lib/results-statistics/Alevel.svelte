@@ -2,13 +2,12 @@
 import Select, { Option } from "@smui/select";
 import Button, { Label } from "@smui/button";
 import CircularProgress from "@smui/circular-progress";
-import { availableSeasons, subjects } from "./subjects.change";
+import { subjects } from "./subjects.change";
 import { getSubjectSeasons } from "../../private/data-retriever";
-import { getContext } from "svelte";
-import type { Writable } from "svelte/store";
+import { compare } from "../utils";
 
-const currentsubject = getContext<Writable<string>>("currentSubject");
-
+export let plotSeasons: string[];
+export let currentSubject = subjects[0];
 $: startSeason = "";
 $: endSeason = "";
 
@@ -19,64 +18,65 @@ let errorMessage = {
 
 function isValid(): boolean {
 	let isValid = true;
-	if(startSeason === undefined) {
+	if(startSeason === undefined || startSeason === "") {
 		errorMessage.start = "Please select a start season";
 		isValid = false;
-	};
-	if(startSeason === undefined) {
-		errorMessage.end = "Please select an ending season"
-	} else if($availableSeasons.indexOf(endSeason) > $availableSeasons.indexOf(startSeason)) {
+	} else errorMessage.start = "";
+	if(endSeason === undefined || endSeason === "") {
+		errorMessage.end = "Please select an ending season";
+		isValid = false;
+		
+	} else if(!compare(startSeason, endSeason)) {
 		errorMessage.end = "End season cannot come before the start season";
 		isValid = false;
-	}
+	} else errorMessage.end = "";
 	return isValid;
 }
 
-function uploadPLotData() {
+function uploadPLotData(seasons: string[]) {
 	if(!isValid()) return;
-}
-
-console.log(startSeason);
-
-
-function change() {
-	console.log('change', startSeason);
+	if(startSeason === endSeason) plotSeasons = [startSeason];
+	else plotSeasons = seasons.slice(seasons.indexOf(startSeason), seasons.indexOf(endSeason) + 1) 
 }
 
 </script>
 
 <div class="form">
-	<Select variant="filled" bind:value={$currentsubject} label="A Level">
+	<Select variant="filled" bind:value={currentSubject} label="A Level">
 		{#each subjects as subject}
 			<Option value={subject}>{subject}</Option>
 		{/each}
 		<svelte:fragment slot="helperText"><span class="error-message"></span></svelte:fragment>
 	</Select>
-	{#await getSubjectSeasons($currentsubject)}
+	{#await getSubjectSeasons(currentSubject)}
 		<CircularProgress style="width: 32px; height: 32px" indeterminate /> Loading Season data...
 	{:then seasons} 
-		<Select on:input={change} variant="filled" bind:value={startSeason} label="Start season" required>
+		<Select variant="filled" bind:value={startSeason} label="Start season" required>
 			{#each seasons as season}
 				<Option value={season}>{season}</Option>
 			{/each}
 			<svelte:fragment slot="helperText">
 				<span class="error-message">
-				{errorMessage.start}
+					{errorMessage.start}
 				</span>
 			</svelte:fragment>
 		</Select>	
-		<Select on:change={() => errorMessage.end = ""} variant="filled" bind:value={endSeason} label="End season" required>
+		<Select variant="filled" bind:value={endSeason} label="End season" required>
 			{#each seasons as season}
 				<Option value={season}>{season}</Option>
 			{/each}
-			<svelte:fragment slot="helperText"><span class="error-message">{errorMessage.end}</span></svelte:fragment>
+			<svelte:fragment slot="helperText">
+				<span class="error-message">
+					{errorMessage.end}
+				</span>
+			</svelte:fragment>
 		</Select>
+		<Button on:click={() => uploadPLotData(seasons)} style="display: block; max-width: fit-content; margin-inline: auto" variant="raised">
+			<Label>Plot results</Label>
+		</Button>
 	{:catch error}
 	<span color="error" style="color: red; font-weight: 550">{error}</span>
 	{/await}
-	<Button on:click={uploadPLotData} style="display: block; max-width: fit-content; margin-inline: auto" variant="raised">
-		<Label>Plot results</Label>
-	</Button>
 </div>
 
 <style>

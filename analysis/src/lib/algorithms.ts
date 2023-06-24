@@ -12,6 +12,21 @@ export function sortSeasons(seasons: string[]): string[] {
 	return arr;
 }
 
+const months = {
+    10: "w",
+    5: "s",
+    2: "m"
+}
+export function convTimeStampToSeason(timestamp: Date): string {
+	return months[timestamp.getMonth()] + (timestamp.getFullYear() % 100);
+}
+
+export function convSeasonToTimeStamp(s: string): Date {
+	const season = Object.keys(months).find(key => months[key] === s[0]);
+	const year = 2000 + parseInt(s.substring(1));
+	return new Date(year, parseInt(season))
+}
+
 export function cumulativeToDistr(array: number[]): number[] {
 	const result = [array[0]];
 	for(let i = array.length - 1; i > 0; i--) result[i] = array[i] - array[i-1];

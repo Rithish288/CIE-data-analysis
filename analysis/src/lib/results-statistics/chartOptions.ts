@@ -20,14 +20,14 @@ export const chartOptions: ChartConfiguration  = {
 	data: {
 		labels: [],
 		datasets: [
-			{ label: "A*", data: [], stack: "" },
-			{ label: "A or above", data: [], stack: "" },
-			{ label: "B or above", data: [], stack: "" },
-			{ label: "C or above", data: [], stack: "" },
-			{ label: "D or above", data: [], stack: "" },
-			{ label: "E or above", data: [], stack: "" },
-			{ label: "ungraded", data: [], stack: "" },
-			{ label: "AS A-E grades", data: [], stack: "" }
+			{ label: "A*", data: []},
+			{ label: "A or above", data: []},
+			{ label: "B or above", data: []},
+			{ label: "C or above", data: []},
+			{ label: "D or above", data: []},
+			{ label: "E or above", data: []},
+			{ label: "ungraded", data: []},
+			{ label: "AS A-E grades", data: []}
 		]
 	}
 }
