@@ -13,18 +13,21 @@ let chart: Chart;
 let plotSeasons = [];
 let currentSubject = subjects[0];
 
+function fillDataset(seasons: string[]) {
+	if(seasons.length <= 0) return;
+	const data = getCollection(currentSubject, convSeasonToTimeStamp(seasons[0]), convSeasonToTimeStamp(seasons[seasons.length - 1]));
+	data.then(values => {
+		values.forEach((element, i) => {
+			const formatted = cumulativeToDistr(formatDoc(element.data()))
+			addDataset(chart, {season: seasons[i], dataPoint: formatted})
+		})
+		chart?.update();
+	});
+}
+
 $: {
-	if(chart) clearDataSet(chart, chart?.data.datasets)
-	if(plotSeasons.length > 0) {
-		const data = getCollection(currentSubject, convSeasonToTimeStamp(plotSeasons[0]), convSeasonToTimeStamp(plotSeasons[plotSeasons.length - 1]));
-		data.then(values => {
-			values.map((element, i) => {
-				const formatted = cumulativeToDistr(formatDoc(element.data()))
-				addDataset(chart, {season: plotSeasons[i], dataPoint: formatted})
-			})
-			chart?.update();
-		});
-	}
+	if(chart) clearDataSet(chart, chart?.data.datasets);
+	fillDataset(plotSeasons);
 }
 onMount(() => {
 	chart = new Chart(canvas.getContext("2d"), chartOptions);
@@ -40,6 +43,9 @@ onMount(() => {
 		<div class="dashboard-content">
 			<canvas bind:this={canvas}></canvas>
 		</div>
+		<footer>
+			The data shown is taken from the documents publicly provided by the official Cambridge Assessment International Education website.
+		</footer>
 	</main>
 </div>
 
@@ -47,6 +53,11 @@ onMount(() => {
 	div.container {
 		display: flex;
 		flex-grow: 100;
+	}
+	footer {
+		opacity: 0.7;
+		font-size: small;
+		text-align: center;
 	}
 	div.container main.dashboard {
 		width: 100%;

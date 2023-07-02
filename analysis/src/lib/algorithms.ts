@@ -17,6 +17,7 @@ const months = {
     5: "s",
     2: "m"
 }
+
 export function convTimeStampToSeason(timestamp: Date): string {
 	return months[timestamp.getMonth()] + (timestamp.getFullYear() % 100);
 }

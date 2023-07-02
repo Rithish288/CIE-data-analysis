@@ -8,9 +8,16 @@ import { compare } from "../utils";
 
 export let plotSeasons: string[];
 export let currentSubject = subjects[0];
+
+const resetSeasons = () => {
+	startSeason = "";
+	endSeason = "";
+}
+
 $: startSeason = "";
 $: endSeason = "";
 
+$: currentSubject, resetSeasons();
 let errorMessage = {
 	start: "",
 	end: ""
@@ -18,31 +25,31 @@ let errorMessage = {
 
 function isValid(): boolean {
 	let isValid = true;
-	if(startSeason === undefined || startSeason === "") {
-		errorMessage.start = "Please select a start season";
-		isValid = false;
-	} else errorMessage.start = "";
-	if(endSeason === undefined || endSeason === "") {
-		errorMessage.end = "Please select an ending season";
-		isValid = false;
-		
-	} else if(!compare(startSeason, endSeason)) {
+	if(startSeason && endSeason && !compare(startSeason, endSeason)) {
 		errorMessage.end = "End season cannot come before the start season";
 		isValid = false;
-	} else errorMessage.end = "";
+	} else {
+		if(startSeason === undefined || startSeason === "") {
+			errorMessage.start = "Please select a start season";
+			isValid = false;
+		} else errorMessage.start = "";
+		if(endSeason === undefined || endSeason === "") {
+			errorMessage.end = "Please select an ending season";
+			isValid = false;
+		} else errorMessage.end = "";
+	}
 	return isValid;
 }
 
 function uploadPLotData(seasons: string[]) {
 	if(!isValid()) return;
-	if(startSeason === endSeason) plotSeasons = [startSeason];
-	else plotSeasons = seasons.slice(seasons.indexOf(startSeason), seasons.indexOf(endSeason) + 1) 
+	plotSeasons = seasons.slice(seasons.indexOf(startSeason), seasons.indexOf(endSeason) + 1);
 }
 
 </script>
 
 <div class="form">
-	<Select variant="filled" bind:value={currentSubject} label="A Level">
+	<Select label$for="subject" variant="filled" bind:value={currentSubject} label="A Level">
 		{#each subjects as subject}
 			<Option value={subject}>{subject}</Option>
 		{/each}
@@ -51,7 +58,7 @@ function uploadPLotData(seasons: string[]) {
 	{#await getSubjectSeasons(currentSubject)}
 		<CircularProgress style="width: 32px; height: 32px" indeterminate /> Loading Season data...
 	{:then seasons} 
-		<Select variant="filled" bind:value={startSeason} label="Start season" required>
+		<Select label$for="start season" variant="filled" bind:value={startSeason} label="Start season" required>
 			{#each seasons as season}
 				<Option value={season}>{season}</Option>
 			{/each}
@@ -61,7 +68,7 @@ function uploadPLotData(seasons: string[]) {
 				</span>
 			</svelte:fragment>
 		</Select>	
-		<Select variant="filled" bind:value={endSeason} label="End season" required>
+		<Select label$for="end season" variant="filled" bind:value={endSeason} label="End season" required>
 			{#each seasons as season}
 				<Option value={season}>{season}</Option>
 			{/each}
