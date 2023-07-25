@@ -21,11 +21,11 @@ export const chartOptions: ChartConfiguration  = {
 		labels: [],
 		datasets: [
 			{ label: "A*", data: []},
-			{ label: "A or above", data: []},
-			{ label: "B or above", data: []},
-			{ label: "C or above", data: []},
-			{ label: "D or above", data: []},
-			{ label: "E or above", data: []},
+			{ label: "A", data: []},
+			{ label: "B", data: []},
+			{ label: "C", data: []},
+			{ label: "D", data: []},
+			{ label: "E", data: []},
 			{ label: "ungraded", data: []},
 			{ label: "AS A-E grades", data: []}
 		]
