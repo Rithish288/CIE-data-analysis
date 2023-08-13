@@ -9,4 +9,4 @@ Select a subject from the select menu and choose a season range to view the stac
 
 ### The results statistics for march 2023 have been added !.
 
-### The grade threshold data will be added by the end of July 2023.
+### The grade threshold data for AS & A Levels will be added by the end of August 2023.
