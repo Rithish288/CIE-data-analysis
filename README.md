@@ -7,6 +7,4 @@ Select a subject from the select menu and choose a season range to view the stac
 
 ![image](https://github.com/Rithish288/CIE-data-anaylsis/assets/78716702/17346319-453c-4ce7-a215-7a5fc8fe3c46)
 
-### The results statistics for march 2023 have been added !.
-
-### The grade threshold data for AS & A Levels will be added by the end of August 2023.
+### The grade threshold visualizations for AS & A Levels will be added by the end of September 2023.
